@@ -1,0 +1,121 @@
+<style>
+    :root{
+        --background-color: #161616;
+        --primary-color: #eeeeee;
+        --secondary-color: #4E9F3D;
+        --tertiary-color: #D8E9A8;
+    }
+    @font-face{
+        font-family: "Neubahn";
+        src: url(Neubahn.otf);
+    }
+    body{
+        margin: 0;
+        padding: 0;
+        background-color: var(--background-color);
+    }
+    .mode{
+        height: 99.5vh;
+        font-family: "Neubahn";
+        font-size: 300px;
+        color: var(--primary-color);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+    .text:hover{
+        color: var(--secondary-color);
+        border-color: var(--tertiary-color);
+    }
+    .text{
+        border: 1px solid var(--primary-color);
+        border-radius: 100%;
+        height: 270px;
+        width: fit-content;
+        padding: 0 40px;
+        transition: all 0.4s ease;
+        cursor: pointer;
+        user-select: none;
+    }
+</style>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script defer src="anime.min.js"></script>
+</head>
+<body onload="openingAnimation()">
+    <div class="mode">
+        <div class="text" onclick="changeMode()">LIGHT</div>
+    </div>
+
+    <script>
+        let all = document.querySelector(".mode");
+        let mode = document.querySelector('.text');
+        let completion = true;
+
+        function openingAnimation() {
+            all.style.transform = "translateY(-1000px)";
+
+            anime({
+                targets: all,
+                translateY: 0,
+                duration: 5000,
+                easing: "easeOutExpo"
+            })
+        }
+
+        function changeMode() {
+            let changeAnimation = function(){
+                completion = false;
+                console.log(completion)
+
+                anime.timeline()
+                    .add({
+                        targets: mode,
+                        translateY: 20,
+                        opacity: -1,
+                        duration: 500,
+                        easing: "easeOutExpo"
+                    })
+                    .add({
+                        targets: mode,
+                        translateY: 0,
+                        opacity: 1,
+                        duration: 500,
+                        easing: "easeOutExpo",
+                        begin: function(){
+                            if(mode.innerHTML === "DARK"){
+                                mode.innerHTML = "LIGHT"
+                                document.documentElement.style.setProperty("--primary-color", "#eeeeee");
+                                document.documentElement.style.setProperty("--tertiary-color", "#D8E9A8");
+                                document.documentElement.style.setProperty("--background-color", "#161616");
+                            }
+                            else{
+                                mode.innerHTML = "DARK"
+                                document.documentElement.style.setProperty("--primary-color", "#161616");
+                                document.documentElement.style.setProperty("--tertiary-color", "#1E5128");
+                                document.documentElement.style.setProperty("--background-color", "##E2E0CC");
+                            }
+                        },
+                        complete: function(anim){
+                            completion = anim.completed;
+                        }
+                    })
+            }
+
+            if(completion === true){
+                if(mode.textContent === "LIGHT"){
+                    changeAnimation();
+                }
+                if(mode.innerHTML === "DARK"){
+                    changeAnimation();
+                }
+            }
+        }
+    </script>
+</body>
+</html>
